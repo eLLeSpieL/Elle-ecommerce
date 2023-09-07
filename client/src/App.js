@@ -17,10 +17,10 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname])
+  }, [pathname]);
 
   return null;
-}
+};
 
 function App() {
   return (

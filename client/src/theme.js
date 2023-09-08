@@ -55,7 +55,7 @@ export const theme = createTheme({
         }
     },
     typography: {
-        fontFamily: ["Faina One", "sans-serif"].join(","),
+        fontFamily: ["Fauna One", "sans-serif"].join(","),
         fontSize: 11,
         h1: {
             fontFamily: ["Cinzel", "sans-serif"].join(","),

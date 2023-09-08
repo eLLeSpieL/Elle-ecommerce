@@ -3,7 +3,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  useLocation
+  useLocation,
 } from 'react-router-dom';
 import Home from "./scenes/home/Home";
 import ItemDetails from "./scenes/itemDetails/ItemDetails";

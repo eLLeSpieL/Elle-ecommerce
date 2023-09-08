@@ -38,12 +38,12 @@ const Item = ({ item, width }) => {
                     alt={item.name}
                     width="300px"
                     height="400px"
-                    src={`https://localhost:1337${url}`}
+                    src={`http://localhost:1337${url}`}
                     onClick={() => navigate(`/item/${item.id}`)}
                     style={{ cursor: 'pointer'}}
                 />
                 <Box
-                    display={isHovered ? "blocked" : 'none'}
+                    display={isHovered ? "block" : 'none'}
                     position="absolute"
                     bottom="10%"
                     left="0"

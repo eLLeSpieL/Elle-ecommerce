@@ -4,11 +4,12 @@ import { Formik } from 'formik';
 import { useState } from 'react';
 import * as yup from "yup";
 import Shipping from "./Shipping";
+import Payment from "./Payment";
 import { shades } from "../../theme";
 
 const initialValues = {
     billingAddress : {
-        fistName: "",
+        firstName: "",
         lastName: "",
         country: "",
         street1: "",
@@ -19,7 +20,7 @@ const initialValues = {
     },
     shippingAddress : {
         isSameAddress: true,
-        fistName: "",
+        firstName: "",
         lastName: "",
         country: "",
         street1: "",
@@ -35,7 +36,7 @@ const initialValues = {
 const checkoutSchema = [
     yup.object().shape({
         billingAddress: yup.object().shape({
-            fistName: yup.string().required("required"),
+            firstName: yup.string().required("required"),
             lastName: yup.string().required("required"),
             country: yup.string().required("required"),
             street1: yup.string().required("required"),
@@ -46,7 +47,7 @@ const checkoutSchema = [
         }),
         shippingAddress: yup.object().shape({
             isSameAddress: yup.boolean(),
-            fistName: yup.string().when("isSameAddress", { is: false, then: yup.string().required("required")}),
+            firstName: yup.string().when("isSameAddress", { is: false, then: yup.string().required("required")}),
             lastName: yup.string().when("isSameAddress", { is: false, then: yup.string().required("required")}),
             country: yup.string().when("isSameAddress", { is: false, then: yup.string().required("required")}),
             street1: yup.string().when("isSameAddress", { is: false, then: yup.string().required("required")}),
@@ -68,13 +69,26 @@ const Checkout = () => {
     const isFirstStep = activeStep === 0;
     const isSecondStep = activeStep ===1;
 
-    const handleFormSubmit = async (value, actions) => {
+    const handleFormSubmit = async (values, actions) => {
         setActiveStep(activeStep + 1);
-    }
+
+        //copies billing address to shipping address
+        if(isFirstStep && values.shippingAddress.isSameAddress){
+            actions.setFieldValue("shippingAddress", {
+                ...values.billingAddress, isSameAddress: true,
+            })
+        }
+
+        if(isSecondStep){
+            makePayment(values);
+        }
+
+        actions.setTouched({});
+    };
     
     async function  makePayment(values){}
 
-    return 
+    return (
     <Box width="80%" m="100px auto">
         <Stepper activeStep={activeStep} sx={{ m: "20px 0 "}}>
             <Step>
@@ -100,22 +114,62 @@ const Checkout = () => {
                     setFieldValue
                 }) => (
                     <form onSubmit={handleSubmit}>
-                        {isFirst && (
+                        {isFirstStep && (
                             <Shipping 
                                 values = {values} 
                                 errors = {errors} 
                                 touched = {touched} 
                                 handleBlur = {handleBlur} 
-                                handleChange = {handleChange} 
-                                handleSubmit = {handleSubmit}
+                                handleChange = {handleChange}
                                 setFieldValue = {setFieldValue} 
                             />
                         )}
+                        {isSecondStep && (
+                            <Payment
+                                values = {values} 
+                                errors = {errors} 
+                                touched = {touched} 
+                                handleBlur = {handleBlur} 
+                                handleChange = {handleChange}
+                                setFieldValue = {setFieldValue} 
+                            />
+                        )}
+                        <Box display="flex" justifyContent="space-between" gap="50px">
+                            {isSecondStep && (
+                                <Button
+                                    fullWidth
+                                    color="primary"
+                                    variant="contained"
+                                    sx={{
+                                        backgroundColor: shades.primary[200],
+                                        boxShadow: "none",
+                                        color: "white",
+                                        borderRadius: 0,
+                                        padding: "15px 40px"
+                                    }}
+                                    onClick={() => setActiveStep(activeStep - 1)}
+                                >BACK</Button>
+                            )}
+                            <Button
+                                fullWidth
+                                type="submit"
+                                color="primary"
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: shades.primary[400],
+                                    boxShadow: "none",
+                                    color: "white",
+                                    borderRadius: 0,
+                                    padding: "15px 40px"
+                                }}
+                                onClick={() => setActiveStep(activeStep - 1)}
+                            >{isFirstStep ? "NEXT" : "PLACE ORDER"}</Button>
+                        </Box>
                     </form>
                 )}
             </Formik>
         </Box>
-    </Box>;
+    </Box>);
 }
 
 export default Checkout;

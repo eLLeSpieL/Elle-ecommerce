@@ -7,7 +7,6 @@ const Shipping = ({
     touched,
     handleBlur,
     handleChange,
-    handleSubmit,
     setFieldValue
 }) => {
     return (
@@ -17,10 +16,47 @@ const Shipping = ({
                 <Typography sx={{ mb: "15px" }} fontSize="18px">
                     BILLING INFORMATION
                 </Typography>
-                <AddressForm />
+                <AddressForm 
+                    type = "billingAddress"
+                    values = {values.billingAddress} 
+                    errors = {errors} 
+                    touched = {touched} 
+                    handleBlur = {handleBlur} 
+                    handleChange = {handleChange} 
+                />
             </Box>
+
+            <Box mb="20px">
+                <FormControlLabel 
+                    label="Same for Shipping Address"
+                    control={
+                        <Checkbox 
+                            defaultChecked
+                            value={values.shippingAddress.isSameAddress}
+                            onChange={() => setFieldValue("shippingAddress.isSameAddress", !values.shippingAddress.isSameAddress)}
+                        />
+                    }
+                />
+            </Box>
+
+            {/* SHIPPING FORM */}
+            {!values.shippingAddress.isSameAddress && (
+                <Box>
+                    <Typography sx={{ mb: "15px" }} fontSize="18px">
+                        SHIPPING INFORMATION
+                    </Typography>
+                    <AddressForm 
+                        type = "shippingAddress"
+                        value = {values.shippingAddress} 
+                        errors = {errors} 
+                        touched = {touched} 
+                        handleBlur = {handleBlur} 
+                        handleChange = {handleChange} 
+                    />
+                </Box>
+            )}
         </Box>
-    )
+    );
 };
 
 export default Shipping;
